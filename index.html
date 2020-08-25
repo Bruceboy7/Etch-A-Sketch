@@ -1,0 +1,83 @@
+<!doctype html>
+<style>
+body {
+  justify-items: center;
+  align-items: center;
+}
+html{
+  min-width: 100vw;
+  min-height: 100vh;
+}
+div .block:hover {
+  background-color: black !important;
+  color: black;
+  cursor: pointer;
+  border: 1px solid red;
+  
+}
+
+
+</style>
+
+<html>
+<head>
+  <title>Etch-A-Sketch</title>
+</head>
+
+<body>
+  
+<div id="frame"></div>
+
+</body>
+
+<script>
+  //Functions -----
+let setIdAndClass = (newId, newClass, passed) => {
+
+passed.setAttribute('id', newId)
+passed.setAttribute('class', newClass)
+}
+//create a grid 16 by 16 of div's
+
+let frameWidth = 500;
+
+const gameColumns = document.createElement('div')
+setIdAndClass("squares", "gameBoard", gameColumns)
+gameColumns.style = `display: flex; flex-direction: column; background-color: gray; width: ${frameWidth}px;;`
+
+const gameFrame = document.getElementById('frame')
+gameFrame.style = "display: flex; align-items: center; justify-content: center; height: 600px; width: 600px; background-color: blue;"
+
+
+for (let i = 0; i < 16; i++) {
+  const row = document.createElement('div')
+  row.style = `display: flex; flex-direction: row; `
+  setIdAndClass(`row${i + 1}`, `row${i + 1}`, row )
+  for (let j = 0; j < 16; j++){
+    console.log(frameWidth/16)
+    const block = document.createElement('div')
+    block.style = `height: ${(frameWidth/16) - .5}px; width: ${(frameWidth/16) - .5}px; background-color: gray; display: flex; align-items: center; justify-content: center; border: 1px solid black;`
+    //block${j + ( i * #)}
+    block.textContent = `${(i + 1) * (j + 1)}`
+    setIdAndClass(`block${j + 1}`, `block`, block)
+    row.appendChild(block)
+  } 
+  gameColumns.appendChild(row)
+}
+gameFrame.appendChild(gameColumns)
+
+
+
+//add a hover effect on the squares that changes their color
+
+
+//add a button on top that clears the squares, then
+//prompt user how many divs on the side of the square gameboard (0-100)
+//repopulate grid in same space
+
+//optional: add another button that assigns a random color to a hovered over div
+//or add a greyscale filter that adds 1/5th grayscale each time its passed over, leading to full black
+
+</script>
+
+</html>
