@@ -8,12 +8,10 @@ html{
   min-width: 100vw;
   min-height: 100vh;
 }
-div .block:hover {
-  background-color: black !important;
-  color: black;
-  cursor: pointer;
-  border: 1px solid red;
-  
+ .block:hover {
+  background-color: gray !important;
+
+
 }
 
 
@@ -37,46 +35,160 @@ let setIdAndClass = (newId, newClass, passed) => {
 passed.setAttribute('id', newId)
 passed.setAttribute('class', newClass)
 }
-//create a grid 16 by 16 of div's
+let makeBoard = () => {
+    let blocks = document.getElementById("blocks")
+    console.log(blocks)
+  if(blocks) {
+     blocks.innerHTML = ""
+  }
+  if ((+sideLength < 0) || (+sideLength > 100)) {
+  sideLength = 16;
+  alert("invalid response. We'll just use 16.") }
 
-let frameWidth = 500;
-
-const gameColumns = document.createElement('div')
-setIdAndClass("squares", "gameBoard", gameColumns)
-gameColumns.style = `display: flex; flex-direction: column; background-color: gray; width: ${frameWidth}px;;`
-
-const gameFrame = document.getElementById('frame')
-gameFrame.style = "display: flex; align-items: center; justify-content: center; height: 600px; width: 600px; background-color: blue;"
-
-
-for (let i = 0; i < 16; i++) {
+for (let i = 0; i < +sideLength; i++) {
   const row = document.createElement('div')
   row.style = `display: flex; flex-direction: row; `
-  setIdAndClass(`row${i + 1}`, `row${i + 1}`, row )
-  for (let j = 0; j < 16; j++){
-    console.log(frameWidth/16)
-    const block = document.createElement('div')
-    block.style = `height: ${(frameWidth/16) - .5}px; width: ${(frameWidth/16) - .5}px; background-color: gray; display: flex; align-items: center; justify-content: center; border: 1px solid black;`
-    //block${j + ( i * #)}
-    block.textContent = `${(i + 1) * (j + 1)}`
-    setIdAndClass(`block${j + 1}`, `block`, block)
+  row.setAttribute('id', `row${i + 1}`)
+  row.setAttribute('class', `row${i + 1}`)
+  for (let j = 0; j < +sideLength; j++){
+    let block = document.createElement('div')
+    block.setAttribute('id', `block${j + ( i * +sideLength)}`)
+    block.setAttribute('class', 'block')
+    block.addEventListener("mouseleave", function(e) {
+        if (colorMode == "color") {
+          
+        block.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`
+        }
+        if (colorMode == "default") {
+          block.style.backgroundColor = `black`;
+
+          
+          }
+        if (colorMode == "gray"){
+          if(block.style.backgroundColor == 'rgb(0, 0, 0)') { 
+            return
+            }
+          if (block.style.backgroundColor == 'rgb(255, 255, 255)') {
+            block.style.backgroundColor ='rgb(187, 187, 187)'
+            return
+      
+          }
+          if (block.style.backgroundColor == 'rgb(187, 187, 187)' ) {
+            block.style.backgroundColor ='rgb(119, 119, 119)' 
+            return
+          }
+          if (block.style.backgroundColor == 'rgb(119, 119, 119)') {
+            block.style.backgroundColor = 'rgb(51, 51, 51)'
+            return
+          }
+          if (block.style.backgroundColor == 'rgb(51, 51, 51)') {
+            block.style.backgroundColor = 'rgb(0, 0, 0)'
+            return
+          }
+          else {
+            block.style.backgroundColor ='rgb(187, 187, 187)'
+            return
+          }
+          }
+        if (colorMode == "eraser") {
+        
+          block.style.backgroundColor = "white"
+        }   
+    });
+    block.style = `height: ${(frameWidth/+sideLength) -1}px; width: ${(frameWidth/+sideLength)}px; background-color: rgb(255, 255, 255); display: flex; align-items: center; justify-content: center; border: .25px solid #ddd;`
     row.appendChild(block)
+   
   } 
   gameColumns.appendChild(row)
 }
-gameFrame.appendChild(gameColumns)
+return(gameColumns)
 
 
 
-//add a hover effect on the squares that changes their color
+
+
+}
+let clearBoard = () => {
+  let blocks = document.getElementsByClassName("block")
+  let blockAmount = blocks.length
+  for (let i = 0; i < blockAmount; i++){
+    blocks[i].style.backgroundColor = "rgb(255, 255, 255)"
+  }
+  
+
+}
+let makeButtons = () => {
+
+let eraserBtn = document.createElement('button');
+setIdAndClass("clearBtn", "button", eraserBtn);
+eraserBtn.textContent = "eraser"
+eraserBtn.setAttribute("onclick", "colorMode = 'eraser'")
+
+let grayBtn = document.createElement('button');
+setIdAndClass("grayBtn", "button", grayBtn);
+grayBtn.textContent = "gray"
+grayBtn.setAttribute("onclick", "colorMode = 'gray'")
+
+let colorBtn = document.createElement('button');
+setIdAndClass("colorBtn", "button", colorBtn);
+colorBtn.textContent = "color"
+colorBtn.setAttribute("onclick", "colorMode = 'color'")
+
+let defaultBtn = document.createElement('button')
+setIdAndClass("defaultBtn", "button", defaultBtn)
+defaultBtn.textContent = "black"
+defaultBtn.setAttribute("onclick", "colorMode = 'default' ")
+
+let clearBtn = document.createElement('button')
+setIdAndClass("clearBtn", "button", clearBtn)
+clearBtn.textContent = "clear current board"
+clearBtn.setAttribute("onclick", `clearBoard()`)
+
+let resetBtn = document.createElement('button')
+setIdAndClass("resetBtn", "button", resetBtn)
+resetBtn.textContent = "reset board dimensions"
+resetBtn.setAttribute("onclick", 'sideLength = prompt("how long should the sides be? [0 - 100]"); makeBoard();' )
+
+let buttons = document.createElement("div")
+setIdAndClass = ("buttons", "buttons", buttons)
+buttons.style = "display: flex; flex-direction: row; justify-conent: center; align-items: center;"
+
+gameFrame.appendChild(buttons)
+buttons.appendChild(eraserBtn)
+buttons.appendChild(grayBtn)
+buttons.appendChild(colorBtn)
+buttons.appendChild(defaultBtn)
+buttons.appendChild(clearBtn)
+buttons.appendChild(resetBtn)
+}
+
+let frameWidth = 500;
+let sideLength = 16;
+let colorMode = "default";
+let pen = true;
+
+
+
+const gameColumns = document.createElement('div')
+setIdAndClass("blocks", "gameBoard", gameColumns)
+gameColumns.style = `display: flex; flex-direction: column; background-color: gray; width: ${frameWidth}px;height: ${frameWidth}; border: 15px inset gray;`
+
+const gameFrame = document.getElementById('frame')
+gameFrame.style = "display: flex; flex-direction: column; align-items: center; justify-content: center; height: 700px; width: 700px; border-radius: 10px; background-color: #d44; border: 15px outset #e44;"
+
+gameFrame.appendChild(makeBoard());
+makeButtons();
+
+
+
 
 
 //add a button on top that clears the squares, then
 //prompt user how many divs on the side of the square gameboard (0-100)
-//repopulate grid in same space
 
-//optional: add another button that assigns a random color to a hovered over div
-//or add a greyscale filter that adds 1/5th grayscale each time its passed over, leading to full black
+
+
+//repopulate grid in same space
 
 </script>
 
