@@ -13,6 +13,19 @@ html{
 
 
 }
+button{
+  background-color: #eee;
+  height: 40px;
+  width: auto;
+  border: none;
+  box-shadow: 1px 1px 1px black;
+  border-radius: 5px;
+
+
+}
+.twister{
+  box-shadow: 1px 1px 1px gray;
+}
 
 
 </style>
@@ -36,8 +49,14 @@ passed.setAttribute('id', newId)
 passed.setAttribute('class', newClass)
 }
 let makeBoard = () => {
-    let blocks = document.getElementById("blocks")
-    console.log(blocks)
+  let blocks = document.getElementById("blocks")
+    
+    if ((sideLength == null) || (sideLength == '')) {
+      sideLength = blocks.childElementCount
+      alert(`ok, your board will be reset in the same ${sideLength}x${sideLength} grid.`)
+      
+    }
+    
   if(blocks) {
      blocks.innerHTML = ""
   }
@@ -59,8 +78,9 @@ for (let i = 0; i < +sideLength; i++) {
           
         block.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`
         }
-        if (colorMode == "default") {
-          block.style.backgroundColor = `black`;
+        if (colorMode == "black") {
+          block.style.backgroundColor = `rgb(0, 0, 0)`;
+          
 
           
           }
@@ -134,10 +154,10 @@ setIdAndClass("colorBtn", "button", colorBtn);
 colorBtn.textContent = "color"
 colorBtn.setAttribute("onclick", "colorMode = 'color'")
 
-let defaultBtn = document.createElement('button')
-setIdAndClass("defaultBtn", "button", defaultBtn)
-defaultBtn.textContent = "black"
-defaultBtn.setAttribute("onclick", "colorMode = 'default' ")
+let blackBtn = document.createElement('button')
+setIdAndClass("blackBtn", "button", blackBtn)
+blackBtn.textContent = "black"
+blackBtn.setAttribute("onclick", "colorMode = 'black' ")
 
 let clearBtn = document.createElement('button')
 setIdAndClass("clearBtn", "button", clearBtn)
@@ -147,24 +167,68 @@ clearBtn.setAttribute("onclick", `clearBoard()`)
 let resetBtn = document.createElement('button')
 setIdAndClass("resetBtn", "button", resetBtn)
 resetBtn.textContent = "reset board dimensions"
-resetBtn.setAttribute("onclick", 'sideLength = prompt("how long should the sides be? [0 - 100]"); makeBoard();' )
+resetBtn.addEventListener("click", function() {
+  sideLength = prompt("how long should the sides be? [0 - 100]"); 
+  makeBoard();
+})
 
 let buttons = document.createElement("div")
 setIdAndClass = ("buttons", "buttons", buttons)
-buttons.style = "display: flex; flex-direction: row; justify-conent: center; align-items: center;"
+buttons.style = "display: flex; flex-direction: row; justify-content: center; align-items: center; padding-top: 10px;"
+
+let leftTwister = document.createElement("div")
+leftTwister.setAttribute("id", "leftTwister")
+leftTwister.setAttribute("class", "twister")
+leftTwister.style = "width: 100px; height: 100px; border-radius: 50px; background-color: #dde; border: 5px outset #ddd; display: flex;  align-items: center; justify-content: center;"
+leftTwister.textContent = `Mode: ${colorMode}`
+
+let rightTwister = document.createElement("div")
+rightTwister.setAttribute("id", "rightTwister")
+rightTwister.setAttribute("class", "twister")
+rightTwister.style = `width: 100px; height: 100px; border-radius: 50px; background-color: #dde; border: 5px outset #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center;`
+
+let rightTwisterTitle = document.createElement("span")
+rightTwisterTitle.textContent = "current dimensions:"
+rightTwisterTitle.style = "text-align: center;"
+
+let rightTwisterFill = document.createElement('span')
+rightTwisterFill.textContent = `${sideLength} x ${sideLength}`
+rightTwister.appendChild(rightTwisterTitle)
+rightTwister.appendChild(rightTwisterFill)
+
+resetBtn.addEventListener('click', function() {
+  rightTwisterFill.textContent = `${sideLength} x ${sideLength}`
+})
+
+let addOns = document.createElement('div')
+addOns.style = "display: flex; flex-direction: row;"
+addOns.appendChild(blackBtn)
+addOns.appendChild(eraserBtn)
+addOns.appendChild(grayBtn)
+addOns.appendChild(colorBtn)
+addOns.appendChild(clearBtn)
+addOns.appendChild(resetBtn)
+
+addOns.addEventListener('click', function() {
+  leftTwister.textContent = `Mode: ${colorMode}`
+})
+rightTwister.addEventListener("click", function() {
+  sideLength = prompt("how long should the sides be? [0 - 100]"); 
+  makeBoard();
+  rightTwisterFill.textContent = `${sideLength} x ${sideLength}`
+
+})
+
 
 gameFrame.appendChild(buttons)
-buttons.appendChild(eraserBtn)
-buttons.appendChild(grayBtn)
-buttons.appendChild(colorBtn)
-buttons.appendChild(defaultBtn)
-buttons.appendChild(clearBtn)
-buttons.appendChild(resetBtn)
+buttons.appendChild(leftTwister)
+buttons.appendChild(addOns)
+buttons.appendChild(rightTwister)
 }
 
 let frameWidth = 500;
 let sideLength = 16;
-let colorMode = "default";
+let colorMode = "black";
 let pen = true;
 
 
@@ -183,12 +247,6 @@ makeButtons();
 
 
 
-//add a button on top that clears the squares, then
-//prompt user how many divs on the side of the square gameboard (0-100)
-
-
-
-//repopulate grid in same space
 
 </script>
 
