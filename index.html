@@ -10,8 +10,6 @@ html{
 }
  .block:hover {
   background-color: gray !important;
-
-
 }
 button{
   background-color: #eee;
@@ -20,8 +18,6 @@ button{
   border: none;
   box-shadow: 1px 1px 1px black;
   border-radius: 5px;
-
-
 }
 .twister{
   box-shadow: 1px 1px 1px gray;
@@ -74,15 +70,14 @@ for (let i = 0; i < +sideLength; i++) {
     block.setAttribute('id', `block${j + ( i * +sideLength)}`)
     block.setAttribute('class', 'block')
     block.addEventListener("mouseleave", function(e) {
+      if (isPlaying){
         if (colorMode == "color") {
           
         block.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`
         }
         if (colorMode == "black") {
           block.style.backgroundColor = `rgb(0, 0, 0)`;
-          
-
-          
+        
           }
         if (colorMode == "gray"){
           if(block.style.backgroundColor == 'rgb(0, 0, 0)') { 
@@ -114,13 +109,19 @@ for (let i = 0; i < +sideLength; i++) {
         
           block.style.backgroundColor = "white"
         }   
-    });
+    }
+    
+  })
+
     block.style = `height: ${(frameWidth/+sideLength) -1}px; width: ${(frameWidth/+sideLength)}px; background-color: rgb(255, 255, 255); display: flex; align-items: center; justify-content: center; border: .25px solid #ddd;`
     row.appendChild(block)
+  }
+
    
-  } 
   gameColumns.appendChild(row)
 }
+
+
 return(gameColumns)
 
 
@@ -174,7 +175,16 @@ resetBtn.addEventListener("click", function() {
 
 let buttons = document.createElement("div")
 setIdAndClass = ("buttons", "buttons", buttons)
+buttons.setAttribute("id", "controlBtns")
 buttons.style = "display: flex; flex-direction: row; justify-content: center; align-items: center; padding-top: 10px;"
+
+let midControls = document.createElement("div")
+midControls.style = "display: flex; flex-direction: column; align-items: center; justify-content: center;"
+
+
+let info = document.createElement("span")
+info.textContent = 'click in the drawing area to start drawing. click again to stop.'
+info.style = 'color: white; padding-top: 5px;'
 
 let leftTwister = document.createElement("div")
 leftTwister.setAttribute("id", "leftTwister")
@@ -201,13 +211,18 @@ resetBtn.addEventListener('click', function() {
 })
 
 let addOns = document.createElement('div')
+
 addOns.style = "display: flex; flex-direction: row;"
+
 addOns.appendChild(blackBtn)
 addOns.appendChild(eraserBtn)
 addOns.appendChild(grayBtn)
 addOns.appendChild(colorBtn)
 addOns.appendChild(clearBtn)
 addOns.appendChild(resetBtn)
+
+midControls.appendChild(addOns)
+midControls.appendChild(info)
 
 addOns.addEventListener('click', function() {
   leftTwister.textContent = `Mode: ${colorMode}`
@@ -222,7 +237,7 @@ rightTwister.addEventListener("click", function() {
 
 gameFrame.appendChild(buttons)
 buttons.appendChild(leftTwister)
-buttons.appendChild(addOns)
+buttons.appendChild(midControls)
 buttons.appendChild(rightTwister)
 }
 
@@ -230,12 +245,25 @@ let frameWidth = 500;
 let sideLength = 16;
 let colorMode = "black";
 let pen = true;
+let isPlaying = false;
 
 
 
 const gameColumns = document.createElement('div')
 setIdAndClass("blocks", "gameBoard", gameColumns)
 gameColumns.style = `display: flex; flex-direction: column; background-color: gray; width: ${frameWidth}px;height: ${frameWidth}; border: 15px inset gray;`
+    gameColumns.addEventListener("click", function(e) {
+      if (isPlaying) {
+        console.log("you were drawing, and now you're not")
+        isPlaying = false; 
+        return
+      }
+      if (!isPlaying) {
+        console.log("you can now draw")
+        isPlaying = true;
+        return
+      }
+    })
 
 const gameFrame = document.getElementById('frame')
 gameFrame.style = "display: flex; flex-direction: column; align-items: center; justify-content: center; height: 700px; width: 700px; border-radius: 10px; background-color: #d44; border: 15px outset #e44;"
