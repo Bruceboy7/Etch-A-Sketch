@@ -183,6 +183,7 @@ midControls.style = "display: flex; flex-direction: column; align-items: center;
 
 
 let info = document.createElement("span")
+info.setAttribute('id', "info")
 info.textContent = 'click in the drawing area to start drawing. click again to stop.'
 info.style = 'color: white; padding-top: 5px;'
 
@@ -244,32 +245,32 @@ buttons.appendChild(rightTwister)
 let frameWidth = 500;
 let sideLength = 16;
 let colorMode = "black";
-let pen = true;
 let isPlaying = false;
 
-
-
-const gameColumns = document.createElement('div')
-setIdAndClass("blocks", "gameBoard", gameColumns)
-gameColumns.style = `display: flex; flex-direction: column; background-color: gray; width: ${frameWidth}px;height: ${frameWidth}; border: 15px inset gray;`
-    gameColumns.addEventListener("click", function(e) {
-      if (isPlaying) {
-        console.log("you were drawing, and now you're not")
-        isPlaying = false; 
-        return
-      }
-      if (!isPlaying) {
-        console.log("you can now draw")
-        isPlaying = true;
-        return
-      }
-    })
 
 const gameFrame = document.getElementById('frame')
 gameFrame.style = "display: flex; flex-direction: column; align-items: center; justify-content: center; height: 700px; width: 700px; border-radius: 10px; background-color: #d44; border: 15px outset #e44;"
 
+const gameColumns = document.createElement('div')
+setIdAndClass("blocks", "gameBoard", gameColumns)
+gameColumns.style = `display: flex; flex-direction: column; background-color: gray; width: ${frameWidth}px;height: ${frameWidth}; border: 15px inset gray;`
+
 gameFrame.appendChild(makeBoard());
 makeButtons();
+  gameColumns.addEventListener("click", function(e) {
+      if (isPlaying) {
+        isPlaying = false; 
+        info.textContent = "click in the drawing area again to start drawing."
+        return
+      }
+      if (!isPlaying) {
+        isPlaying = true;
+        document.getElementById('info').textContent = "click again to stop"
+        return
+      }
+    })
+
+
 
 
 
