@@ -1,12 +1,68 @@
 <!doctype html>
 <style>
+  #header {
+    background-image: url("https://www.seekpng.com/png/detail/24-245797_paint-drops-wallpaper-wallpaper-backgrounds-paint-paint-splatter.png");
+    height: 400px;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: -100px;
+    border-bottom: 10px solid #aaa;
+    border-radius: 50px;
+  }
+#frame {
+  z-index: 1;
+  box-shadow: 3px 3px 3px #777;
+
+}
+
+#addOns{
+ 
+  background-color: #55555599;
+  border: 4px inset #766;
+  border-radius: 10px;
+  display: flex; 
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  width: 420px;
+  grid-template-areas: 
+    "customize . clearReset"
+  ;
+}
+#customizeBox {
+  display: grid;
+  width: 300px;
+  height: 100px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  
+}
+
+#clearReset {
+  grid-area: "clearReset"; 
+  display: grid; 
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  width: 100px;
+  height: 100px;
+  
+}
+
 body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: rgb(198, 219, 243);
  
 }
 html{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 100vw;
   min-height: 100vh;
 }
@@ -16,10 +72,13 @@ html{
 button{
   background-color: #eee;
   height: 40px;
-  width: auto;
-  border: none;
-  box-shadow: 1px 1px 1px black;
+  width: 80px;
+  border: 4px outset #999;
+  box-shadow: 1px 1px 2px #444;
   border-radius: 5px;
+  justify-self: center;
+  align-self: center;
+
 }
 .twister{
   box-shadow: 1px 1px 1px gray;
@@ -34,6 +93,7 @@ button{
 </head>
 
 <body>
+  <header id="header" class="header">Etch-A-Sketch</header>
   
 <div id="frame"></div>
 
@@ -76,7 +136,9 @@ for (let i = 0; i < +sideLength; i++) {
         console.log(colorMode)
         if (colorMode == "color") {
           
-        block.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`
+        block.style.backgroundColor = `hsl(${Math.floor(Math.random() * 360)}, 60%, 50%)`
+        
+         
         
         }
         if (colorMode == "rainbow") {
@@ -170,26 +232,37 @@ let eraserBtn = document.createElement('button');
 setIdAndClass("clearBtn", "button", eraserBtn);
 eraserBtn.textContent = "eraser"
 eraserBtn.setAttribute("onclick", "colorMode = 'eraser'")
+eraserBtn.setAttribute('style', "grid-area: 'eraser'; ")
 
 let grayBtn = document.createElement('button');
 setIdAndClass("grayBtn", "button", grayBtn);
 grayBtn.textContent = "gray"
 grayBtn.setAttribute("onclick", "colorMode = 'gray'")
+grayBtn.setAttribute('style', "grid-area: 'gray'")
 
 let colorBtn = document.createElement('button');
 setIdAndClass("colorBtn", "button", colorBtn);
 colorBtn.textContent = "color"
 colorBtn.setAttribute("onclick", "colorMode = 'color'")
+colorBtn.setAttribute('style', "grid-area: 'color'; ")
 
 let blackBtn = document.createElement('button')
 setIdAndClass("blackBtn", "button", blackBtn)
 blackBtn.textContent = "black"
 blackBtn.setAttribute("onclick", "colorMode = 'black' ")
+blackBtn.setAttribute('style', "grid-area: 'black'; ")
 
 let clearBtn = document.createElement('button')
 setIdAndClass("clearBtn", "button", clearBtn)
 clearBtn.textContent = "clear current board"
 clearBtn.setAttribute("onclick", `clearBoard()`)
+clearBtn.setAttribute('style', "grid-area: 'clear'")
+
+let rainbowBtn = document.createElement('button')
+setIdAndClass('rainbowBtn', "button", rainbowBtn)
+rainbowBtn.textContent = "rainbow"
+rainbowBtn.setAttribute("onclick", "colorMode = 'rainbow'")
+rainbowBtn.setAttribute('style', "grid-area: 'rainbow'; ")
 
 let resetBtn = document.createElement('button')
 setIdAndClass("resetBtn", "button", resetBtn)
@@ -198,6 +271,7 @@ resetBtn.addEventListener("click", function() {
   sideLength = prompt("how long should the sides be? [0 - 100]"); 
   makeBoard();
 })
+resetBtn.setAttribute('style', "grid-area: 'reset'")
 
 let buttons = document.createElement("div")
 setIdAndClass = ("buttons", "buttons", buttons)
@@ -242,17 +316,31 @@ rightTwister.appendChild(rightTwisterFill)
 resetBtn.addEventListener('click', function() {
   rightTwisterFill.textContent = `${sideLength} x ${sideLength}`
 })
+let customizeBox = document.createElement('div'
+)
+customizeBox.setAttribute("id", "customizeBox")
+customizeBox.setAttribute("style", "grid-area: customize;")
+
+
+customizeBox.appendChild(blackBtn)
+customizeBox.appendChild(eraserBtn)
+customizeBox.appendChild(grayBtn)
+customizeBox.appendChild(colorBtn)
+customizeBox.appendChild(rainbowBtn)
+
+let clearReset = document.createElement("div"
+)
+clearReset.setAttribute("id", "clearReset")
+clearReset.appendChild(clearBtn)
+clearReset.appendChild(resetBtn)
+
 
 let addOns = document.createElement('div')
+addOns.setAttribute("id", "addOns")
 
-addOns.style = "display: flex; flex-direction: row;"
+addOns.appendChild(customizeBox)
+addOns.appendChild(clearReset)
 
-addOns.appendChild(blackBtn)
-addOns.appendChild(eraserBtn)
-addOns.appendChild(grayBtn)
-addOns.appendChild(colorBtn)
-addOns.appendChild(clearBtn)
-addOns.appendChild(resetBtn)
 
 midControls.appendChild(addOns)
 midControls.appendChild(info)
